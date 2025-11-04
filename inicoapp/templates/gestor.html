@@ -1,0 +1,97 @@
+{% extends 'plantilla.html' %}
+
+{% block content %}
+
+  {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+            <div class="alert
+                {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}
+                alert-dismissible fade show shadow-sm border-0 rounded-4 text-center animate__animated animate__fadeInDown"
+                role="alert">
+                <i class="bi
+                   {% if message.tags == 'success' %}bi-check-circle-fill{% else %}bi-exclamation-triangle-fill{% endif %}
+                   me-2"></i>
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+
+    <h1 class="text-center">Subir Nuevo Archivo</h1>
+    <form class="w-50 shadow mx-auto p-4 m-3" method="post" enctype="multipart/form-data"
+          action="{% url 'guardar' %}">
+
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_descripcion" class="form-label">Descripción:</label>
+            <input type="text" name="descripcion" id="id_descripcion" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_archivo" class="form-label">Archivo PDF:</label>
+            <input type="file" name="archivo_pdf" id="id_archivo" class="form-control" accept=".pdf" required>
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" name="visible" id="id_visible" class="form-check-input" checked>
+            <label for="id_visible" class="form-check-label">Visible (el público lo puede ver)</label>
+        </div>
+
+        <input type="submit" value="Guardar" class="btn btn-primary">
+    </form>
+
+    <hr class="my-5">
+
+    <h2 class="text-center">Gestionar Archivos Existentes</h2>
+    <div class="container mt-4">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Archivo</th>
+                        <th>Visible</th>
+                        <th>Fecha Subida</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documentos %}
+                    <tr>
+                        <td>{{ doc.descripcion }}</td>
+                        <td>
+                            <a href="{{ doc.archivo_pdf.url }}" target="_blank">
+                                {{ doc.archivo_pdf.name|truncatechars:20 }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if doc.visible %}
+                                <i class="bi bi-check-circle-fill text-success"></i> Sí
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-danger"></i> No
+                            {% endif %}
+                        </td>
+                        <td>{{ doc.creado|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'detalle' doc.id %}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil-fill"></i> Editar
+                            </a>
+                            <a href="{% url 'eliminar' doc.id %}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar este archivo? Esta acción no se puede deshacer.');">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center p-4">Aún no se han subido documentos.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

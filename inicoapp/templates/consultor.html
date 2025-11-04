@@ -1,0 +1,52 @@
+{% extends 'plantilla.html' %}
+
+{% block content %}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 w-75 text-center">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h2 class="mb-0">Consulta de Archivos</h2>
+        </div>
+
+        <div class="card-body bg-light">
+            {% if documentos %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-bordered text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Archivo PDF</th>
+                                <th scope="col">Fecha De Publicacion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for documento in documentos %}
+                            <tr>
+                                <td class="fw-semibold">{{ documento.descripcion }}</td>
+                                <td>
+                                    {% if documento.archivo_pdf %}
+                                        <a href="{{ documento.archivo_pdf.url }}"
+                                           class="btn btn-outline-success btn-lg mx-auto d-inline-flex align-items-center gap-2"
+                                           target="_blank">
+                                            <i class="bi bi-file-earmark-pdf-fill"></i> Ver PDF
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">No disponible</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ documento.creado|date:"d/m/Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning text-center mt-3">
+                    No hay documentos registrados actualmente.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

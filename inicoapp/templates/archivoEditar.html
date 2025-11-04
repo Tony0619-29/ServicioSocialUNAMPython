@@ -1,0 +1,45 @@
+{% extends 'plantilla.html' %}
+
+{% block content %}
+
+<h1 class="text-center">Editar Archivo</h1>
+
+<form class="w-50 shadow mx-auto p-4 m-3" method="post" enctype="multipart/form-data"
+      action="{% url 'editar' documento.id %}"> 
+
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="id_descripcion" class="form-label">Descripción:</label>
+        <input type="text" name="descripcion" id="id_descripcion" class="form-control" 
+               value="{{ documento.descripcion }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="id_archivo" class="form-label">Archivo PDF:</label>
+        
+        {% if documento.archivo_pdf %}
+            <p class="form-text">
+                Archivo actual: 
+                <a href="{{ documento.archivo_pdf.url }}" target="_blank">{{ documento.archivo_pdf.name }}</a>
+            </p>
+        {% endif %}
+        
+        <p class="form-text text-muted">
+            Sube un nuevo archivo PDF solo si deseas reemplazar el actual.
+        </p>
+        <input type="file" name="archivo_pdf" id="id_archivo" class="form-control" accept=".pdf">
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" name="visible" id="id_visible" class="form-check-input" 
+               {% if documento.visible %}checked{% endif %}>
+        <label for="id_visible" class="form-check-label">Visible (el público lo puede ver)</label>
+    </div>
+
+    <input type="submit" value="Actualizar" class="btn btn-success">
+    <a href="{% url 'gestor' %}" class="btn btn-secondary">Cancelar</a>
+
+</form>
+
+{% endblock %}
