@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'documentos_bd',
-        'USER': 'doc_user',
-        'PASSWORD': '1234567Nombre',
+        'USER': 'root',
+        'PASSWORD': 'Root123456',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
